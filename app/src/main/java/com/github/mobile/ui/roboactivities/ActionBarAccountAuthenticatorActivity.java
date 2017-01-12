@@ -43,6 +43,10 @@ public class ActionBarAccountAuthenticatorActivity extends AppCompatActivity {
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
+        authenticateAccount();
+    }
+
+    private void authenticateAccount() {
         mAccountAuthenticatorResponse =
             getIntent().getParcelableExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE);
 
