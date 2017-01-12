@@ -66,9 +66,9 @@ public class RequestReader {
             lock = dir.getChannel().lock();
             input = new ObjectInputStream(new GZIPInputStream(
                     new FileInputStream(dir.getFD()), 8192 * 8));
-            int streamVersion = input.readInt();
-            if (streamVersion != version) {
-                delete = true;
+
+            delete = readVersion(input);
+            if (delete){
                 return null;
             }
             return (V) input.readObject();
@@ -105,4 +105,19 @@ public class RequestReader {
                 }
         }
     }
+
+    private boolean readVersion(ObjectInputStream input){
+        try {
+
+            int streamVersion = input.readInt();
+            if (streamVersion != version) {
+                return true;
+            }
+        } catch (IOException e){
+            Log.d(TAG, "Exception reading cache " + handle.getName(), e);
+            return false;
+        }
+        return  false;
+    }
+
 }
