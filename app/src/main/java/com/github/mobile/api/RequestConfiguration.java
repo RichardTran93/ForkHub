@@ -52,12 +52,16 @@ public class RequestConfiguration implements okhttp3.Interceptor {
             credentials = "Basic " + EncodingUtils.toBase64(account.getUsername() + ':' + account.getPassword());
         }
 
-        Request newRequest = originalRequest.newBuilder()
-                .header("Authorization", credentials)
-                .header("User-Agent", HEADER_USER_AGENT)
-                .addHeader("Accept", HEADER_ACCEPT)
-                .build();
+        Request newRequest = getRequest(originalRequest, credentials);
 
         return chain.proceed(newRequest);
+    }
+
+    private Request getRequest(Request originalRequest, String credentials) {
+        return originalRequest.newBuilder()
+                    .header("Authorization", credentials)
+                    .header("User-Agent", HEADER_USER_AGENT)
+                    .addHeader("Accept", HEADER_ACCEPT)
+                    .build();
     }
 }
