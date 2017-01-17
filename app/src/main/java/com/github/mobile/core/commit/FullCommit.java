@@ -69,6 +69,13 @@ public class FullCommit extends ArrayList<CommitComment> implements
         List<CommitFile> rawFiles = commit.getFiles();
         boolean hasComments = comments != null && !comments.isEmpty();
         boolean hasFiles = rawFiles != null && !rawFiles.isEmpty();
+        hasComments = checkComments(comments, rawFiles, hasComments, hasFiles);
+
+        if (hasComments)
+            addAll(comments);
+    }
+
+    private boolean checkComments(Collection<CommitComment> comments, List<CommitFile> rawFiles, boolean hasComments, boolean hasFiles) {
         if (hasFiles) {
             files = new ArrayList<FullCommitFile>(rawFiles.size());
             if (hasComments) {
@@ -90,9 +97,7 @@ public class FullCommit extends ArrayList<CommitComment> implements
                     files.add(new FullCommitFile(file));
         } else
             files = Collections.emptyList();
-
-        if (hasComments)
-            addAll(comments);
+        return hasComments;
     }
 
     @Override
