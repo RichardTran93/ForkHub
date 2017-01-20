@@ -17,17 +17,28 @@ package com.github.mobile.core.commit;
 
 import com.github.mobile.core.ResourcePager;
 
+import org.eclipse.egit.github.core.Commit;
 import org.eclipse.egit.github.core.IRepositoryIdProvider;
 import org.eclipse.egit.github.core.RepositoryCommit;
+import org.eclipse.egit.github.core.client.PageIterator;
+import org.eclipse.egit.github.core.service.CommitService;
+
+import java.util.List;
 
 /**
  * Pager over commits
  */
-public abstract class CommitPager extends ResourcePager<RepositoryCommit> {
+public class CommitPager extends ResourcePager<RepositoryCommit> {
 
     private final IRepositoryIdProvider repository;
 
     private final CommitStore store;
+
+    private CommitService service;
+
+    private String last;
+
+    private String ref;
 
     /**
      * Create pager
@@ -36,9 +47,12 @@ public abstract class CommitPager extends ResourcePager<RepositoryCommit> {
      * @param store
      */
     public CommitPager(final IRepositoryIdProvider repository,
-            final CommitStore store) {
+            final CommitStore store, final CommitService service,
+                       final String ref) {
         this.repository = repository;
         this.store = store;
+        this.service = service;
+        this.ref = ref;
     }
 
     @Override
@@ -48,6 +62,29 @@ public abstract class CommitPager extends ResourcePager<RepositoryCommit> {
 
     @Override
     protected RepositoryCommit register(final RepositoryCommit resource) {
-        return store.addCommit(repository, resource);
+        // Store first parent of last commit registered for next page
+        // lookup
+        List<Commit> parents = resource.getParents();
+        if (parents != null && !parents.isEmpty())
+            last = parents.get(0).getSha();
+        else
+            last = null;
+
+        return super.register(resource);
+    }
+
+    @Override
+    public PageIterator<RepositoryCommit> createIterator(int page,
+                                                         int size) {
+        if (page > 1 || ref == null)
+            return service.pageCommits(repository, last, null, size);
+        else
+            return service.pageCommits(repository, ref, null, size);
+    }
+
+    @Override
+    public ResourcePager<RepositoryCommit> clear() {
+        last = null;
+        return super.clear();
     }
 }
