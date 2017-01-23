@@ -79,7 +79,7 @@ public abstract class UserNewsFragment extends NewsFragment implements
             refreshWithProgress();
     }
 
-    @Override
+    //@Override
     protected boolean viewUser(User user) {
         if (org.getId() != user.getId()) {
             startActivity(UserViewActivity.createIntent(user));

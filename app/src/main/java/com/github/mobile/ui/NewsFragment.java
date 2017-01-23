@@ -265,9 +265,7 @@ public abstract class NewsFragment extends PagedItemFragment<Event> {
      * @param user
      * @return true if new activity started, false otherwise
      */
-    protected boolean viewUser(User user) {
-        return false;
-    }
+    protected abstract boolean viewUser(User user);
 
     /**
      * Start an activity to view the given {@link Issue}
