@@ -84,12 +84,17 @@ public class SearchUserService extends UserService {
      * @return list of users
      * @throws IOException
      */
+
+    //Precondition: query != null and query.length() == 0
     public List<SearchUser> searchUsers(final String query,
             final int startPage) throws IOException {
+
         if (query == null)
             throw new IllegalArgumentException("Query cannot be null"); //$NON-NLS-1$
         if (query.length() == 0)
             throw new IllegalArgumentException("Query cannot be empty"); //$NON-NLS-1$
+
+        ///////////////////pretend this upper part is commented////////////////////////
 
         StringBuilder uri = new StringBuilder(SEGMENT_LEGACY + SEGMENT_USER
                 + SEGMENT_SEARCH);
