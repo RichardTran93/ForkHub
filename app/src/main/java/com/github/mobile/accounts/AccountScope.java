@@ -74,6 +74,8 @@ public class AccountScope extends ScopeBase {
      *
      * @param account
      */
+
+    //Precondition: currentAccount.get != null
     public void enterWith(final GitHubAccount account) {
         if (currentAccount.get() != null)
             throw new IllegalStateException(
