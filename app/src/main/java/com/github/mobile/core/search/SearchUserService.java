@@ -15,6 +15,8 @@
  */
 package com.github.mobile.core.search;
 
+import android.support.annotation.NonNull;
+
 import static org.eclipse.egit.github.core.client.IGitHubConstants.CHARSET_UTF8;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.PARAM_START_PAGE;
 import static org.eclipse.egit.github.core.client.IGitHubConstants.SEGMENT_USER;
@@ -33,6 +35,9 @@ import org.eclipse.egit.github.core.client.PagedRequest;
 import org.eclipse.egit.github.core.service.UserService;
 
 public class SearchUserService extends UserService {
+
+
+    private PagedRequest<SearchUser> request = createPagedRequest();
 
     private static class UserContainer implements
             IResourceProvider<SearchUser> {
@@ -83,11 +88,14 @@ public class SearchUserService extends UserService {
      * @param startPage
      * @return list of users
      * @throws IOException
+     *
+     * Precondition: The query cannot be empty: query != null and query.length() != 0
+     * Postcondition: None, returns the result of the query.
+     *
      */
 
-    //Precondition: query != null and query.length() == 0
     public List<SearchUser> searchUsers(final String query,
-            final int startPage) throws IOException {
+            final int startPage) throws IOException{
 
         if (query == null)
             throw new IllegalArgumentException("Query cannot be null"); //$NON-NLS-1$
@@ -96,16 +104,39 @@ public class SearchUserService extends UserService {
 
         ///////////////////pretend this upper part is commented////////////////////////
 
-        StringBuilder uri = new StringBuilder(SEGMENT_LEGACY + SEGMENT_USER
-                + SEGMENT_SEARCH);
+        createQuery(query, startPage);
+
+        return getAll(request);
+    }
+
+    /**
+     * Create StringBuilder with constant values declared in IGitHubConstants
+     *
+     * @return Stringbuilder
+     */
+
+    @NonNull
+    private StringBuilder getStringBuilder() {
+        return new StringBuilder(SEGMENT_LEGACY + SEGMENT_USER
+                    + SEGMENT_SEARCH);
+    }
+
+    /**
+     * Create query and store it in local attribute. Ensure a command-like format.
+     * Precondition: Query cannot be empty: query != null && query.length() != 0.
+     * Postcondition: request is constructed in the correct way.
+     */
+    private void createQuery(final String query, final int startPage) throws IOException{
+        StringBuilder uri = getStringBuilder();
+
         final String encodedQuery = URLEncoder.encode(query, CHARSET_UTF8)
                 .replace("+", "%20") //$NON-NLS-1$ //$NON-NLS-2$
                 .replace(".", "%2E"); //$NON-NLS-1$ //$NON-NLS-2$
+
         uri.append('/').append(encodedQuery);
 
-        PagedRequest<SearchUser> request = createPagedRequest();
-
         Map<String, String> params = new HashMap<String, String>(2, 1);
+
         if (startPage > 0)
             params.put(PARAM_START_PAGE, Integer.toString(startPage));
         if (!params.isEmpty())
@@ -113,7 +144,6 @@ public class SearchUserService extends UserService {
 
         request.setUri(uri);
         request.setType(UserContainer.class);
-        return getAll(request);
     }
 
     /**

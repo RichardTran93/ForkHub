@@ -66,6 +66,11 @@ public class AccountScope extends ScopeBase {
      */
     public void enterWith(final Account account,
             final AccountManager accountManager) {
+
+        if (currentAccount.get() != null)
+            throw new IllegalStateException(
+                    "A scoping block is already in progress");
+
         enterWith(new GitHubAccount(account, accountManager));
     }
 
@@ -73,19 +78,18 @@ public class AccountScope extends ScopeBase {
      * Enter scope with account
      *
      * @param account
+     *
+     * Precondition: There is not an active account: currentAccount.get() == null
+     * Postcondition: The current account is @param account. currentAccount.get() != null  &&
+     *                  currentAccount.get() == account
      */
-
-    //Precondition: currentAccount.get != null
     public void enterWith(final GitHubAccount account) {
-        if (currentAccount.get() != null)
-            throw new IllegalStateException(
-                    "A scoping block is already in progress");
-
         currentAccount.set(account);
     }
 
     /**
      * Exit scope
+     *
      */
     public void exit() {
         if (currentAccount.get() == null)

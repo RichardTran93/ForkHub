@@ -38,7 +38,7 @@ public class FullCommit extends ArrayList<CommitComment> implements
 
     private final RepositoryCommit commit;
 
-    private final List<FullCommitFile> files;
+    private List<FullCommitFile> files;
 
     /**
      * Create commit with no comments

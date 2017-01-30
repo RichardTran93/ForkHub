@@ -106,6 +106,10 @@ public class RequestReader {
         }
     }
 
+    /*
+    Extracted method from V Read() which reads the version of the input stream to the read method.
+     */
+
     private boolean readVersion(ObjectInputStream input){
         try {
 
