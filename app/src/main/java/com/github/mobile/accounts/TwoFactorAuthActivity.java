@@ -23,6 +23,7 @@ import static com.github.mobile.accounts.AccountConstants.ACCOUNT_TYPE;
 import static com.github.mobile.accounts.LoginActivity.configureSyncFor;
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -208,7 +209,7 @@ public class TwoFactorAuthActivity extends RoboActionBarActivity {
         });
         dialog.show();
 
-        authenticationTask = new RoboAsyncTask<User>(this) {
+        authenticationTask = new LoginAuth(this, dialog) {
 
             @Override
             public User call() throws Exception {
@@ -237,19 +238,19 @@ public class TwoFactorAuthActivity extends RoboActionBarActivity {
 
             @Override
             protected void onException(Exception e) throws RuntimeException {
-                dialog.dismiss();
-
-                Log.d(TAG, "Exception requesting handling two-factor authentication", e);
-                setResult(RESULT_CANCELED, new Intent().putExtra(PARAM_EXCEPTION, e));
+                super.onException(e);
+                Log.d(TwoFactorAuthActivity.TAG, "Exception requesting handling two-factor authentication", e);
+                setResult(Activity.RESULT_CANCELED, new Intent().putExtra(TwoFactorAuthActivity.PARAM_EXCEPTION, e));
                 finish();
             }
 
             @Override
             public void onSuccess(User user) {
                 dialog.dismiss();
-                setResult(RESULT_OK);
+                setResult(Activity.RESULT_OK);
                 finish();
             }
+
         };
         authenticationTask.execute();
     }
