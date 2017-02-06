@@ -15,6 +15,7 @@
  */
 package com.github.mobile.core.issue;
 
+import com.github.mobile.core.IDByID;
 import com.github.mobile.core.ResourcePager;
 
 import org.eclipse.egit.github.core.Issue;
@@ -45,6 +46,10 @@ public abstract class IssuePager extends ResourcePager<Issue> {
 
     @Override
     protected Object getId(Issue resource) {
-        return resource.getId();
+        IDByID id = new IDByID();
+
+        id.setId(resource.getId());
+
+        return id.getID();
     }
 }

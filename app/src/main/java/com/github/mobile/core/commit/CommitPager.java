@@ -15,6 +15,7 @@
  */
 package com.github.mobile.core.commit;
 
+import com.github.mobile.core.IDBySha;
 import com.github.mobile.core.ResourcePager;
 
 import org.eclipse.egit.github.core.Commit;
@@ -57,7 +58,11 @@ public class CommitPager extends ResourcePager<RepositoryCommit> {
 
     @Override
     protected Object getId(final RepositoryCommit resource) {
-        return resource.getSha();
+        IDBySha sha = new IDBySha();
+
+        sha.setId(resource.getSha());
+
+        return sha.getID();
     }
 
     @Override

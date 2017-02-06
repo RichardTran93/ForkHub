@@ -47,6 +47,8 @@ public abstract class ResourcePager<E> {
      */
     protected final Map<Object, E> resources = new LinkedHashMap<Object, E>();
 
+    protected IDBehavior idBehavior;
+
     /**
      * Are more pages available?
      */
