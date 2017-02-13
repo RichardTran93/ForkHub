@@ -28,11 +28,12 @@ import org.eclipse.egit.github.core.service.CommitService;
 /**
  * Store of commits
  */
-public class CommitStore extends ItemStore {
+public class CommitStore extends ItemStore{
 
     private final Map<String, ItemReferences<RepositoryCommit>> commits = new HashMap<String, ItemReferences<RepositoryCommit>>();
 
     private final CommitService service;
+
 
     /**
      * Create commit store
@@ -66,27 +67,20 @@ public class CommitStore extends ItemStore {
      */
     public RepositoryCommit addCommit(IRepositoryIdProvider repo,
             RepositoryCommit commit) {
+
+        CommitUpdaterFactory updaterFactory = new CommitUpdaterFactory(repo);
+
         RepositoryCommit current = getCommit(repo, commit.getSha());
+
+
         if (current != null) {
-            current.setAuthor(commit.getAuthor());
-            current.setCommit(commit.getCommit());
-            current.setCommitter(commit.getCommitter());
-            current.setFiles(commit.getFiles());
-            current.setParents(commit.getParents());
-            current.setSha(commit.getSha());
-            current.setStats(commit.getStats());
-            current.setUrl(commit.getUrl());
-            return current;
+            updaterFactory.updateExistingCommit(current);
+
         } else {
-            String repoId = repo.generateId();
-            ItemReferences<RepositoryCommit> repoCommits = commits.get(repoId);
-            if (repoCommits == null) {
-                repoCommits = new ItemReferences<RepositoryCommit>();
-                commits.put(repoId, repoCommits);
-            }
-            repoCommits.put(commit.getSha(), commit);
-            return commit;
+            updaterFactory.restoreExistingCommit(commits, commit);
         }
+
+        return updaterFactory.getCurrentCommit();
     }
 
     /**
@@ -101,4 +95,5 @@ public class CommitStore extends ItemStore {
             final String id) throws IOException {
         return addCommit(repo, service.getCommit(repo, id));
     }
+
 }

@@ -32,6 +32,8 @@ import org.eclipse.egit.github.core.client.NoSuchPageException;
  */
 public abstract class ResourcePager<E> {
 
+    protected IDBehavior idBehavior;
+
     /**
      * Next page to request
      */
@@ -47,7 +49,7 @@ public abstract class ResourcePager<E> {
      */
     protected final Map<Object, E> resources = new LinkedHashMap<Object, E>();
 
-    protected IDBehavior idBehavior;
+
 
     /**
      * Are more pages available?
