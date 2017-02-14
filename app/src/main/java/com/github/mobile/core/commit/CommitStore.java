@@ -67,19 +67,13 @@ public class CommitStore extends ItemStore{
      */
     public RepositoryCommit addCommit(IRepositoryIdProvider repo,
             RepositoryCommit commit) {
-
         CommitUpdaterFactory updaterFactory = new CommitUpdaterFactory(repo);
-
         RepositoryCommit current = getCommit(repo, commit.getSha());
-
-
         if (current != null) {
             updaterFactory.updateExistingCommit(current);
-
         } else {
             updaterFactory.restoreExistingCommit(commits, commit);
         }
-
         return updaterFactory.getCurrentCommit();
     }
 
