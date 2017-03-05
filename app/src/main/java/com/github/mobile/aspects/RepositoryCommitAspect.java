@@ -18,10 +18,10 @@ import java.lang.annotation.Annotation;
 public class RepositoryCommitAspect {
 
     private static final String POINTCUT_METHOD =
-            "execution(@com.github.mobile.core.CheckNull * *(..))";
+            "execution(@com.github.mobile.core * *(..))";
 
     private static final String POINTCUT_CONSTRUCTOR =
-            "execution(@com.github.mobile.core.CheckNull *.new(..))";
+            "execution(@com.github.mobile.core *.new(..))";
 
     @Pointcut(POINTCUT_METHOD)
     public void methodAnnotatedWithCheckNull() {}
@@ -38,10 +38,6 @@ public class RepositoryCommitAspect {
         if(arg == null) {
             throw new CustomException("RepositoryCommitNullChecker", "RepositoryCommit is null");
         }
-
-    }
-
-    public void validate(Object param, Annotation annotation, Annotation methodAnnotation) throws CustomException {
 
     }
 }
