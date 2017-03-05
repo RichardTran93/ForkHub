@@ -17,6 +17,8 @@ package com.github.mobile.core.commit;
 
 import android.text.TextUtils;
 
+import com.github.mobile.aspects.CheckNull;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,6 +47,7 @@ public class FullCommit extends ArrayList<CommitComment> implements
      *
      * @param commit
      */
+    @CheckNull
     public FullCommit(final RepositoryCommit commit) {
         this.commit = commit;
         List<CommitFile> rawFiles = commit.getFiles();
@@ -62,6 +65,7 @@ public class FullCommit extends ArrayList<CommitComment> implements
      * @param commit
      * @param comments
      */
+    @CheckNull
     public FullCommit(final RepositoryCommit commit,
             final Collection<CommitComment> comments) {
         this.commit = commit;
