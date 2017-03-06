@@ -15,6 +15,8 @@
  */
 package com.github.mobile.core.gist;
 
+import com.github.mobile.aspects.CheckNull;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,6 +42,7 @@ public class FullGist extends ArrayList<Comment> implements Serializable {
      * @param starred
      * @param comments
      */
+    @CheckNull
     public FullGist(final Gist gist, final boolean starred,
             final Collection<Comment> comments) {
         super(comments);

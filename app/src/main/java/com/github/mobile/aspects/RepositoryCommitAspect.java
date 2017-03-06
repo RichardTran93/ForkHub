@@ -18,10 +18,10 @@ import java.lang.annotation.Annotation;
 public class RepositoryCommitAspect {
 
     private static final String POINTCUT_METHOD =
-            "execution(@com.github.mobile.core * *(..))";
+            "execution(@com.github.mobile.core.annotation.CheckNull * *(..))";
 
     private static final String POINTCUT_CONSTRUCTOR =
-            "execution(@com.github.mobile.core *.new(..))";
+            "execution(@com.github.mobile.core.annotation.CheckNull *.new(..))";
 
     @Pointcut(POINTCUT_METHOD)
     public void methodAnnotatedWithCheckNull() {}
@@ -34,10 +34,26 @@ public class RepositoryCommitAspect {
 
         Signature signature = joinPoint.getSignature();
         MethodSignature mSignature = (MethodSignature) signature;
+        String className = mSignature.getDeclaringTypeName();
+        String methodName = mSignature.getName();
+        String[] parameters = mSignature.getParameterNames();
+
         Object arg = joinPoint.getArgs()[0];
         if(arg == null) {
-            throw new CustomException("RepositoryCommitNullChecker", "RepositoryCommit is null");
-        }
+            String message = messageBuilder(className, methodName);
 
+            throw new CustomException(message, "First argument to method is null");
+        }
+    }
+
+    private static String messageBuilder(String className, String methodName){
+        StringBuilder message = new StringBuilder();
+
+        message.append("Package ---> core --->");
+        message.append("Class ---> "+ className);
+        message.append("--->");
+        message.append("Method ---> "+ methodName);
+
+        return message.toString();
     }
 }

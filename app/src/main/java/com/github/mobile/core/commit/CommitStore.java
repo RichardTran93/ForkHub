@@ -15,6 +15,7 @@
  */
 package com.github.mobile.core.commit;
 
+import com.github.mobile.aspects.CheckNull;
 import com.github.mobile.core.ItemStore;
 
 import java.io.IOException;
@@ -40,6 +41,7 @@ public class CommitStore extends ItemStore{
      *
      * @param service
      */
+    @CheckNull
     public CommitStore(final CommitService service) {
         this.service = service;
     }

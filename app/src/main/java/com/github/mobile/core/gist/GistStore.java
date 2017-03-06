@@ -15,6 +15,7 @@
  */
 package com.github.mobile.core.gist;
 
+import com.github.mobile.aspects.CheckNull;
 import com.github.mobile.core.ItemStore;
 
 import java.io.IOException;
@@ -39,6 +40,7 @@ public class GistStore extends ItemStore {
      *
      * @param service
      */
+    @CheckNull
     public GistStore(final GistService service) {
         this.service = service;
     }
@@ -97,6 +99,7 @@ public class GistStore extends ItemStore {
      * @return refreshed gist
      * @throws IOException
      */
+    @CheckNull
     public Gist refreshGist(String id) throws IOException {
         return addGist(service.getGist(id));
     }
@@ -108,6 +111,7 @@ public class GistStore extends ItemStore {
      * @return edited gist
      * @throws IOException
      */
+    @CheckNull
     public Gist editGist(Gist gist) throws IOException {
         return addGist(service.updateGist(gist));
     }
