@@ -34,10 +34,14 @@ import com.google.inject.name.Named;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -223,13 +227,18 @@ public class AccountDataManager {
      * This method may perform file I/O and should never be called on the
      * UI-thread
      *
+     * The strategy parameter may be used by the user of this method to choose the way in which
+     * issuefilters are stored.
+     *
      * @param filter
+     * @param strategy
+     *
      */
-    public void addIssueFilter(IssueFilter filter) {
+    public void addIssueFilter(IssueFilter filter, String strategy) {
         final File cache = new File(root, "issue_filters.ser");
         Collection<IssueFilter> filters = read(cache);
         if (filters == null)
-            filters = new HashSet<IssueFilter>();
+            filters = parseStrategy(strategy);
         if (filters.add(filter))
             write(cache, filters);
     }
@@ -246,7 +255,7 @@ public class AccountDataManager {
 
             @Override
             public IssueFilter run(Account account) throws Exception {
-                addIssueFilter(filter);
+                addIssueFilter(filter, "default");
                 return filter;
             }
 
@@ -303,5 +312,25 @@ public class AccountDataManager {
                 Log.d(TAG, "Exception removing issue filter", e);
             }
         }.execute();
+    }
+
+    /**
+     *  Method for creating the data structure based on the user of this method's needs.
+     *
+     * @param strategy
+     * @return Collection of Issuefilters based on the strategy that the client wants.
+     */
+
+    private Collection<IssueFilter> parseStrategy(String strategy){
+        switch (strategy){
+            case "hashset":
+                return new HashSet<>();
+            case "treeset":
+                return new TreeSet<>();
+            case "linkedlist":
+                return new LinkedList<>();
+            default:
+                return new HashSet<>();
+        }
     }
 }

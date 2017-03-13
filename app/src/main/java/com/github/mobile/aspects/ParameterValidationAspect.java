@@ -15,7 +15,7 @@ import java.lang.annotation.Annotation;
  */
 
 @Aspect
-public class RepositoryCommitAspect {
+public class ParameterValidationAspect {
 
     private static final String POINTCUT_METHOD =
             "execution(@com.github.mobile.core.annotation.CheckNull * *(..))";
