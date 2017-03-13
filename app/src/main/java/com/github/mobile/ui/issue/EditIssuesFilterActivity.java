@@ -262,7 +262,7 @@ public class EditIssuesFilterActivity extends DialogFragmentActivity {
 
         switch (requestCode) {
         case REQUEST_LABELS:
-            filter.setLabels(LabelsDialogFragment.getSelected(arguments));
+            filter.setLabels(LabelsDialogFragment.getSelected(arguments), true);
             updateLabels();
             break;
         case REQUEST_MILESTONE:

@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -102,17 +103,24 @@ public class IssueFilter implements Serializable, Cloneable, Comparator<Label> {
      * @param labels
      * @return this filter
      */
-    public IssueFilter setLabels(Collection<Label> labels) {
-        if (labels != null && !labels.isEmpty()) {
-            if (this.labels == null)
-                this.labels = new TreeSet<Label>(this);
-            else
-                this.labels.clear();
-            this.labels.addAll(labels);
-        } else
-            this.labels = null;
+    public IssueFilter setLabels(Collection<Label> labels, boolean ordered) {
+        if(labels == null || !labels.isEmpty())
+            return setLabels();
+        if(ordered)
+            this.labels = new TreeSet<Label>(this);
+        else
+            this.labels = new HashSet<Label>();
+        this.labels.clear();
+        this.labels.addAll(labels);
         return this;
     }
+
+    public IssueFilter setLabels() {
+        this.labels = null;
+        return this;
+    }
+
+
 
     /**
      * @return labels
