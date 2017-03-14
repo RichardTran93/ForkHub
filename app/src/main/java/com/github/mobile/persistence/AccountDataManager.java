@@ -250,12 +250,12 @@ public class AccountDataManager {
      * @param requestFuture
      */
     public void addIssueFilter(final IssueFilter filter,
-            final RequestFuture<IssueFilter> requestFuture) {
+                               final RequestFuture<IssueFilter> requestFuture, final String strategy) {
         new AuthenticatedUserTask<IssueFilter>(context, EXECUTOR) {
 
             @Override
             public IssueFilter run(Account account) throws Exception {
-                addIssueFilter(filter, "default");
+                addIssueFilter(filter, strategy);
                 return filter;
             }
 

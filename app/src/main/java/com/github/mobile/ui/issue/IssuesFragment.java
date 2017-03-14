@@ -228,6 +228,13 @@ public class IssuesFragment extends PagedItemFragment<Issue> {
         });
     }
 
+    /**
+     * CSE218 Change: Add parameter to cache.addIssueFilter to enable user to make the implementation
+     * strategy that is used to store the issuefilters.
+     * @param item
+     * @return
+     */
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (!isUsable())
@@ -248,7 +255,7 @@ public class IssuesFragment extends PagedItemFragment<Issue> {
                 public void success(IssueFilter response) {
                     ToastUtils.show(getActivity(), R.string.message_filter_saved);
                 }
-            });
+            }, "default");
             return true;
         default:
             return super.onOptionsItemSelected(item);
